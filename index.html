@@ -1,78 +1,89 @@
 <!DOCTYPE html>
-<!--Nesta observação vocês devem colocar os nomes dos alunos que ajudaram na atividade.
-Um aluno por linha e coloque o nome completo, o respectiv número e a turma.
-Nome:                                       nº:         Turma:              
-Nome:                                       nº:         Turma:              
-Nome:                                       nº:         Turma:              
-Nome:                                       nº:         Turma:              
-Nome:                                       nº:         Turma:              
-Nome:                                       nº:         Turma:              
-Nome:                                       nº:         Turma:              -->
 <html lang="pt-BR">
 <head>
-    <title>Primos até N</title>
     <meta charset="UTF-8">
-    <script>
-        function recebeNumero() {
-            var canvas = document.getElementById('meuCanvas');
-            if (canvas.getContext) {
-                var cntxt = canvas.getContext('2d');
-                var maxWidth = 300;
-                var lineHeight = 35;
-                var x = (canvas.width - maxWidth) / 2;
-                var y = 60;
-                var grad = cntxt.createLinearGradient(0, 0, canvas.width, 0);
-                grad.addColorStop(0, "rgb(255, 0, 0)");
-                grad.addColorStop(0.5, "rgb(255, 255, 255)");
-                grad.addColorStop(1, "rgb(0, 0, 0)");
-
-                var N = parseInt(document.getElementById("Numero1").value, 10);
-                cntxt.fillStyle = "rgb(255, 255, 255)";
-                cntxt.fillRect(0, 0, canvas.width, canvas.height);
-                cntxt.font = "20px Comic Sans MS";
-                cntxt.fillStyle = grad;
-                mostrarPrimos(cntxt, N, x, y);
-            }
+    <title>Primos até N</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f2f2f2;
         }
+        #meuCanvas {
+            border: 1px solid #000;
+            background-color: #fff;
+            display: block;
+            margin: 20px auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            font-size: 18px;
+        }
+        input[type="number"] {
+            width: 100px;
+            padding: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Primos até N</h1>
+    <label for="numeroInput">Digite um número natural:</label>
+    <input type="number" id="numeroInput" min="2" step="1" autofocus>
+    <button onclick="mostrarPrimos()">Mostrar Primos</button>
+    <br><br>
+    <canvas id="meuCanvas" width="400" height="400"></canvas>
 
-        function mostrarPrimos(cntxt, N, x, y) {
-            var primos = []; // Array para armazenar os números primos encontrados
-            var contador = 0;
-            var numeroAtual = 2; // Começa com o primeiro número primo
+    <script>
+        function mostrarPrimos() {
+            var canvas = document.getElementById('meuCanvas');
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
 
-            while (contador < N) {
-                // Verifica se o número atual é primo
-                var ehPrimo = true;
-                for (var i = 2; i <= Math.sqrt(numeroAtual); i++) {
-                    if (numeroAtual % i === 0) {
-                        ehPrimo = false;
-                        break;
-                    }
+            var numero = parseInt(document.getElementById('numeroInput').value);
+
+            // Função para verificar se um número é primo
+            function ehPrimo(num) {
+                if (num <= 1) return false;
+                if (num <= 3) return true;
+                if (num % 2 == 0 || num % 3 == 0) return false;
+                for (var i = 5; i * i <= num; i += 6) {
+                    if (num % i == 0 || num % (i + 2) == 0) return false;
                 }
-                if (ehPrimo) {
-                    primos.push(numeroAtual); // Adiciona o número primo ao array
-                    contador++;
-                }
-                numeroAtual++;
+                return true;
             }
 
-            // Mostra os números primos encontrados no canvas
-            cntxt.fillText("Números primos até " + N + ":", x, y);
-            y += 30; // Incrementa a posição y para a próxima linha
-            for (var j = 0; j < primos.length; j++) {
-                cntxt.fillText(primos[j], x, y);
-                y += 20; // Incrementa a posição y para a próxima linha
+            var primos = [];
+            for (var i = 2; i <= numero; i++) {
+                if (ehPrimo(i)) {
+                    primos.push(i);
+                }
+            }
+
+            // Exibir os números primos no canvas
+            context.font = '16px Arial';
+            context.fillStyle = '#000';
+            context.fillText('Números primos até ' + numero + ':', 20, 30);
+            var yPos = 50;
+            for (var i = 0; i < primos.length; i++) {
+                context.fillText(primos[i], 20, yPos);
+                yPos += 20;
             }
         }
     </script>
-</head>
-<body>
-<div>
-    <h1>Primos até N</h1>
-    <label style="font-size: 20px;">Digite um número natural:</label>
-    <input type="text" id="Numero1" autofocus><br>
-    <button onclick="recebeNumero()">Mostrar Primos</button><br><br>
-    <canvas id="meuCanvas" width="400" height="400" style="border:1px solid #000000; background-color: white;"></canvas>
-</div>
 </body>
 </html>
